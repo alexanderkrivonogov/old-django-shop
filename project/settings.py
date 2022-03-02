@@ -34,7 +34,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '*%llg=d1(nj$d)aq342(@tnez2jszn
 # DEBUG = True
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['']
 # Celery settings
 
 LOGIN_REDIRECT_URL = reverse_lazy('dashboard')
