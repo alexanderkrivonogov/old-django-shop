@@ -1,0 +1,23 @@
+{% extends "comics_site/base.html" %}
+{% load static %}
+{% block title %}
+{% if category %}{{ category.title }}{% else %}Comics{% endif %}
+{% endblock %}
+{% block content %}
+<div class="comic-detail">
+    <img src="{% if comics.photo %}{{ comics.photo.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+    <h1>{{ comics.name }}</h1>
+    <h2><a href="{{ comics.category.get_absolute_url }}">{{ comics.category }}</a></h2>
+    <p class="price">{{ comics.price }}</p>
+    {{ comics.comment|linebreaks }}
+    <p class="price"> $ {{ comics.price }}</p>
+
+
+    <form action="{% url 'cart:cart_add' comics.id %}" method="post">
+        {{ cart_comics_form }}
+        {% csrf_token %}
+        <input type="submit" value="Add to cart">
+    </form>
+
+</div>
+{% endblock %}

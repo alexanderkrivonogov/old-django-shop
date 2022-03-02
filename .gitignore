@@ -71,6 +71,7 @@ coverage.xml
 # Translations
 *.mo
 *.pot
+*.bak
 
 # Sphinx documentation
 docs/_build/
@@ -87,6 +88,7 @@ target/
 __pycache__/
 local_settings.py
 
+.venv
 .env
 db.sqlite3
 
