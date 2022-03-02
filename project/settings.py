@@ -36,7 +36,6 @@ DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 
 ALLOWED_HOSTS = ['nameless-fjord-80355.herokuapp.com', '127.0.0.1']
-
 # Celery settings
 
 LOGIN_REDIRECT_URL = reverse_lazy('dashboard')
