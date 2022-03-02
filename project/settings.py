@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os.path
 from pathlib import Path
-
+import os
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,10 +25,14 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*%llg=d1(nj$d)aq342(@tnez2jszn*ehjt&sc2d6w-^_5z3ks'
+
+# SECRET_KEY = 'django-insecure-*%llg=d1(nj$d)aq342(@tnez2jszn*ehjt&sc2d6w-^_5z3ks'
+
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '*%llg=d1(nj$d)aq342(@tnez2jszn*ehjt&sc2d6w-^_5z3ks')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 ALLOWED_HOSTS = []
 # Celery settings
@@ -61,6 +65,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -104,6 +109,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -150,6 +156,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -157,3 +166,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Heroku: Update database configuration from $DATABASE_URL.
+import dj_database_url
+
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
